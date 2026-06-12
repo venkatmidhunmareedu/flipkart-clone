@@ -1,0 +1,24 @@
+---
+description: E-commerce domain models and business rules for the Flipkart clone
+alwaysApply: true
+---
+
+# Domain models
+
+**Product**: id, title, slug, description, images[], categoryId, brand, mrp (paise), sellingPrice (paise), stock, rating, reviewCount, attributes (size/color variants)
+
+**Category**: id, name, slug, parentId (nullable), image
+
+**CartItem**: productId, variantId?, quantity, priceAtAdd (snapshot in paise)
+
+**Order**: id, userId, items[], shippingAddress, status (pending|confirmed|shipped|delivered|cancelled), totalAmount (paise), paymentStatus
+
+**Address**: name, phone, line1, line2, city, state, pincode (6 digits), isDefault
+
+# Business rules
+
+- Store money as integers in paise (₹1 = 100 paise) to avoid float errors
+- Discount % = `round((mrp - sellingPrice) / mrp * 100)`
+- Cart totals recalculate server-side; never trust client price
+- Pincode validates `/^\d{6}$/` for Indian delivery
+- Order status transitions are one-way: pending → confirmed → shipped → delivered

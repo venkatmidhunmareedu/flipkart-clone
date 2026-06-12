@@ -1,0 +1,23 @@
+---
+description: Flipkart-clone monorepo structure, commands, and conventions
+alwaysApply: true
+---
+
+# Monorepo
+
+- pnpm workspaces: `apps/*`, `packages/*`
+- Run tasks via `make run-frontend`, `make run-backend`, or `pnpm` / `turbo` from repo root
+- Shared packages: `@repo/ui`, `@repo/eslint-config`, `@repo/typescript-config`
+
+# Code style
+
+- Minimize scope — one feature per change
+- Reuse `@repo/ui` components before creating new primitives
+- INR pricing, Indian pincodes, MRP vs selling price for e-commerce data
+- API responses: `{ data }` success, `{ error: { message, code } }` failure
+
+# File placement
+
+- Backend API: `apps/backend/src/routes/`, `controllers/`, `services/`
+- Frontend pages: `apps/frontend/app/`
+- Shared types (when needed): new `packages/types` workspace

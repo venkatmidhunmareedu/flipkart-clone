@@ -1,0 +1,27 @@
+---
+description: Express 5 API conventions for the backend app
+globs: apps/backend/**/*
+alwaysApply: false
+---
+
+# Backend API
+
+- Mount routes under `/api/<resource>` in `app.ts`
+- Router files: `src/routes/<resource>.routes.ts`, default export the router
+- Keep `index.ts` for dotenv + listen only; export app from `app.ts`
+
+```typescript
+// routes/products.routes.ts
+import express from "express";
+const router = express.Router();
+
+router.get("/", (req, res) => {
+  res.json({ data: { products: [] } });
+});
+
+export default router;
+```
+
+- Use `express.json()` middleware (already in `app.ts`)
+- Validate request bodies before business logic; return 400 with `{ error: { message, code } }`
+- Use async handlers with try/catch; forward errors via `next(err)` when error middleware exists

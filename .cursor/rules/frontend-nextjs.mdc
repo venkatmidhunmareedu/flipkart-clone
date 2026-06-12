@@ -1,0 +1,25 @@
+---
+description: Next.js 16 frontend patterns for the Flipkart clone UI
+globs: apps/frontend/**/*
+alwaysApply: false
+---
+
+# Next.js 16
+
+Read `node_modules/next/dist/docs/` before writing Next.js code — APIs differ from older versions.
+
+- App Router only: `app/` directory, server components by default
+- Client components: add `"use client"` only when needed (interactivity, hooks, browser APIs)
+- Use `next/image` for product images; set `width`/`height` or `fill`
+
+# Flipkart UI tokens
+
+- Primary blue: `#2874f0`
+- Accent yellow: `#ffe500`
+- Product card: image, title (2-line clamp), rating stars, price row (selling + strikethrough MRP + % off)
+- Listing page: left filter sidebar + product grid
+
+# Data fetching
+
+- Call backend at `process.env.NEXT_PUBLIC_API_URL` (default `http://localhost:5000`)
+- Prefer server components + `fetch` for catalog pages; client state for cart interactions
