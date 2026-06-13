@@ -21,14 +21,20 @@ export function ProfileForm() {
 
   const [editingProfile, setEditingProfile] = useState(false);
   const [editingEmail, setEditingEmail] = useState(false);
+  const [editingPhone, setEditingPhone] = useState(false);
   const [editingPassword, setEditingPassword] = useState(false);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [gender, setGender] = useState<string>("");
   const [newEmail, setNewEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+
+  function formatPhone(value: string) {
+    return `+91 ${value.slice(0, 5)} ${value.slice(5)}`;
+  }
 
   function startProfileEdit() {
     if (!user) return;
@@ -52,6 +58,11 @@ export function ProfileForm() {
     setEditingEmail(false);
     setNewEmail("");
     router.push(`/verify-email?email=${encodeURIComponent(updated.email)}`);
+  }
+
+  async function handleSavePhone() {
+    await updateProfile.mutateAsync({ phone });
+    setEditingPhone(false);
   }
 
   async function handleChangePassword() {
@@ -221,10 +232,57 @@ export function ProfileForm() {
           <h2 className="text-base font-medium text-[var(--text-primary,#212121)]">
             Mobile Number
           </h2>
+          {!editingPhone && (
+            <button
+              type="button"
+              onClick={() => {
+                setPhone(user.phone ?? "");
+                setEditingPhone(true);
+              }}
+              className="text-sm font-medium text-[var(--primary,#2874f0)] hover:underline"
+            >
+              {user.phone ? "Edit" : "Add"}
+            </button>
+          )}
         </div>
-        <p className="text-sm text-[var(--text-secondary,#878787)]">
-          {user.phone ?? "Not added yet"}
-        </p>
+
+        {editingPhone ? (
+          <div className="space-y-3">
+            <Input
+              type="tel"
+              inputMode="numeric"
+              maxLength={10}
+              value={phone}
+              onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
+              placeholder="10-digit mobile number"
+            />
+            {updateProfile.isError && (
+              <p className="text-sm text-[var(--danger,#d32f2f)]">{updateProfile.error.message}</p>
+            )}
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                onClick={() => void handleSavePhone()}
+                disabled={updateProfile.isPending || phone.length !== 10}
+                className="rounded-sm bg-[var(--primary,#2874f0)] text-white"
+              >
+                Save
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setEditingPhone(false)}
+                className="rounded-sm"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <p className="text-sm font-medium">
+            {user.phone ? formatPhone(user.phone) : "Not added yet"}
+          </p>
+        )}
       </section>
 
       <section className="rounded-sm bg-white p-6 shadow-sm">

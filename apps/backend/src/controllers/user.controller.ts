@@ -5,6 +5,7 @@ import {
   changePasswordSchema,
   updateEmailSchema,
   updateProfileSchema,
+  type UpdateProfileInput,
 } from "../lib/validators/user.validators";
 import {
   UserError,
@@ -39,9 +40,7 @@ export async function getProfileHandler(req: Request, res: Response) {
 
 export async function updateProfileHandler(req: Request, res: Response) {
   try {
-    const body = (req as Request & {
-      validated: { firstName?: string; lastName?: string; gender?: string };
-    }).validated;
+    const body = (req as Request & { validated: UpdateProfileInput }).validated;
 
     const user = await updateProfile(req.user!.id, body);
     res.json({ data: { user } });

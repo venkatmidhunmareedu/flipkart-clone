@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 
 import prisma from "../lib/prisma";
 import { sendEmailOTP } from "./auth.service";
+import type { UpdateProfileInput } from "../lib/validators/user.validators";
 
 const BCRYPT_ROUNDS = 12;
 
@@ -52,16 +53,14 @@ export async function getUserProfile(userId: string) {
   return formatUser(user);
 }
 
-export async function updateProfile(
-  userId: string,
-  input: { firstName?: string; lastName?: string; gender?: string },
-) {
+export async function updateProfile(userId: string, input: UpdateProfileInput) {
   const user = await prisma.user.update({
     where: { id: userId },
     data: {
       ...(input.firstName !== undefined && { firstName: input.firstName }),
       ...(input.lastName !== undefined && { lastName: input.lastName }),
       ...(input.gender !== undefined && { gender: input.gender }),
+      ...(input.phone !== undefined && { phone: input.phone }),
     },
   });
 

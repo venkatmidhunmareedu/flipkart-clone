@@ -21,6 +21,7 @@ export type UpdateProfileInput = {
   firstName?: string;
   lastName?: string;
   gender?: string;
+  phone?: string;
 };
 
 async function getAccessToken(): Promise<string | null> {
