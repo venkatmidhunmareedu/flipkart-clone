@@ -8,7 +8,7 @@ function parseAllowedOrigins(): string[] {
   const raw =
     process.env.ALLOWED_ORIGINS ??
     process.env.CORS_ORIGIN ??
-    "http://localhost:3000,https://*.vercel.app";
+    "*";
 
   return raw
     .split(",")
@@ -46,7 +46,6 @@ export function getCorsOptions(): CorsOptions {
 
       callback(null, isAllowed ? origin : false);
     },
-    credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"],
     allowedHeaders: ["Content-Type", "Authorization"],
   };
