@@ -4,22 +4,17 @@ function normalizeOrigin(origin: string): string {
   return origin.trim().replace(/\/$/, "");
 }
 
-export function getAllowedOrigins(): string[] {
-  const raw =
-    process.env.ALLOWED_ORIGINS ??
-    process.env.CORS_ORIGIN ??
-    "http://localhost:3000";
 
-  return raw
-    .split(",")
-    .map(normalizeOrigin)
-    .filter(Boolean);
-}
+const allowedOrigins = [
+  "https://flipkart-clone-frontend-ten.vercel.app",
+  "https://*.vercel.app",
+  "http://localhost:3000",
+];
 
 export function getCorsOptions(): CorsOptions {
   return {
     origin(origin, callback) {
-      const allowed = getAllowedOrigins();
+      const allowed = allowedOrigins;
 
       if (!origin) {
         callback(null, true);
