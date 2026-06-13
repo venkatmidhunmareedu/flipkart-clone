@@ -1,9 +1,5 @@
 import type { CorsOptions } from "cors";
 
-function normalizeOrigin(origin: string): string {
-  return origin.trim().replace(/\/$/, "");
-}
-
 
 const allowedOrigins = [
   "https://flipkart-clone-frontend-ten.vercel.app",
@@ -20,9 +16,7 @@ export function getCorsOptions(): CorsOptions {
         callback(null, true);
         return;
       }
-
-      const normalized = normalizeOrigin(origin);
-      if (allowed.includes(normalized)) {
+      if (allowed.includes(origin)) {
         callback(null, true);
         return;
       }
