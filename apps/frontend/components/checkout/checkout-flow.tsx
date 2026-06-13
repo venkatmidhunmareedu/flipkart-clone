@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { Loader2, ShieldCheck, CreditCard } from "lucide-react";
 
 import { AddressStep } from "@/components/checkout/address-step";
 import { OrderSummaryStep } from "@/components/checkout/order-summary-step";
@@ -14,6 +15,8 @@ import { CART_QUERY_KEY, useCart } from "@/hooks/use-cart";
 import type { Address } from "@/lib/address-api";
 import { checkDelivery, confirmOrder, initiateOrder, type DeliverabilityResult } from "@/lib/order-api";
 import { openRazorpayCheckout } from "@/lib/razorpay";
+
+type PaymentPhase = "idle" | "initiating" | "open" | "confirming";
 
 export function CheckoutFlow() {
   const router = useRouter();
@@ -25,7 +28,9 @@ export function CheckoutFlow() {
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const [deliverability, setDeliverability] = useState<DeliverabilityResult | null>(null);
   const [isCheckingDelivery, setIsCheckingDelivery] = useState(false);
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [paymentPhase, setPaymentPhase] = useState<PaymentPhase>("idle");
+
+  const isProcessingPayment = paymentPhase !== "idle";
 
   const refreshDeliverability = useCallback(
     async (address: Address) => {
@@ -64,14 +69,14 @@ export function CheckoutFlow() {
     }
 
     setStep(3);
-    setIsProcessingPayment(true);
+    setPaymentPhase("initiating");
 
     const initiateResult = await initiateOrder(selectedAddress.id);
 
     if (!initiateResult.ok) {
       toast.error(initiateResult.error.message);
       setStep(2);
-      setIsProcessingPayment(false);
+      setPaymentPhase("idle");
       return;
     }
 
@@ -81,7 +86,7 @@ export function CheckoutFlow() {
     if (!razorpayKey) {
       toast.error("Payment gateway is not configured");
       setStep(2);
-      setIsProcessingPayment(false);
+      setPaymentPhase("idle");
       return;
     }
 
@@ -99,17 +104,18 @@ export function CheckoutFlow() {
       },
       theme: { color: "#2874f0" },
       onSuccess: async (response) => {
+        setPaymentPhase("confirming");
+
         const confirmResult = await confirmOrder(
           orderId,
           response.razorpay_payment_id,
           response.razorpay_signature,
         );
 
-        setIsProcessingPayment(false);
-
         if (!confirmResult.ok) {
           toast.error(confirmResult.error.message);
           setStep(2);
+          setPaymentPhase("idle");
           return;
         }
 
@@ -118,16 +124,18 @@ export function CheckoutFlow() {
         router.push(`/order-confirmation/${orderId}`);
       },
       onDismiss: () => {
-        setIsProcessingPayment(false);
+        setPaymentPhase("idle");
         setStep(2);
         toast.message("Payment cancelled");
       },
       onFailure: (message) => {
-        setIsProcessingPayment(false);
+        setPaymentPhase("idle");
         setStep(2);
         toast.error(message);
       },
     });
+
+    setPaymentPhase("open");
   }
 
   if (isLoading) {
@@ -185,21 +193,67 @@ export function CheckoutFlow() {
       )}
 
       {step === 3 && selectedAddress && (
-        <div className="rounded-sm border border-[var(--border,#e0e0e0)] bg-white p-8 text-center">
-          <p className="text-lg font-medium text-[var(--text-primary,#212121)]">
-            Complete payment in the Razorpay window
-          </p>
-          <p className="mt-2 text-sm text-[var(--text-secondary,#878787)]">
-            Delivering to {selectedAddress.name}, {selectedAddress.pincode}
-          </p>
-          <button
-            type="button"
-            onClick={() => setStep(2)}
-            className="mt-4 text-sm font-medium text-[var(--primary,#2874f0)] hover:underline"
-          >
-            Back to order summary
-          </button>
-        </div>
+        <>
+          {paymentPhase === "initiating" && (
+            <div className="rounded-sm border border-[var(--border,#e0e0e0)] bg-white px-8 py-16 text-center">
+              <div className="mx-auto mb-5 flex size-16 items-center justify-center rounded-full bg-[var(--primary,#2874f0)]/10">
+                <CreditCard className="size-8 text-[var(--primary,#2874f0)]" />
+              </div>
+              <Loader2 className="mx-auto mb-4 size-8 animate-spin text-[var(--primary,#2874f0)]" />
+              <p className="text-base font-semibold text-[var(--text-primary,#212121)]">
+                Preparing your payment window…
+              </p>
+              <p className="mt-2 text-sm text-[var(--text-secondary,#878787)]">
+                Please wait while we connect to the payment gateway
+              </p>
+            </div>
+          )}
+
+          {paymentPhase === "open" && (
+            <div className="rounded-sm border border-[var(--border,#e0e0e0)] bg-white px-8 py-16 text-center">
+              <div className="mx-auto mb-5 flex size-16 items-center justify-center rounded-full bg-[var(--primary,#2874f0)]/10">
+                <CreditCard className="size-8 text-[var(--primary,#2874f0)]" />
+              </div>
+              <p className="text-base font-semibold text-[var(--text-primary,#212121)]">
+                Complete payment in the Razorpay window
+              </p>
+              <p className="mt-2 text-sm text-[var(--text-secondary,#878787)]">
+                Delivering to{" "}
+                <span className="font-medium text-[var(--text-primary,#212121)]">
+                  {selectedAddress.name}
+                </span>
+                , {selectedAddress.pincode}
+              </p>
+              <div className="mt-4 flex items-center justify-center gap-1.5">
+                <span className="size-2 animate-bounce rounded-full bg-[var(--primary,#2874f0)] [animation-delay:0ms]" />
+                <span className="size-2 animate-bounce rounded-full bg-[var(--primary,#2874f0)] [animation-delay:150ms]" />
+                <span className="size-2 animate-bounce rounded-full bg-[var(--primary,#2874f0)] [animation-delay:300ms]" />
+              </div>
+              <button
+                type="button"
+                onClick={() => { setStep(2); setPaymentPhase("idle"); }}
+                className="mt-6 text-sm font-medium text-[var(--primary,#2874f0)] hover:underline"
+              >
+                Back to order summary
+              </button>
+            </div>
+          )}
+
+          {paymentPhase === "confirming" && (
+            <div className="rounded-sm border border-[var(--border,#e0e0e0)] bg-white px-8 py-16 text-center">
+              <div className="mx-auto mb-5 flex size-16 items-center justify-center rounded-full bg-[var(--success,#388e3c)]/10">
+                <ShieldCheck className="size-8 text-[var(--success,#388e3c)]" />
+              </div>
+              <Loader2 className="mx-auto mb-4 size-8 animate-spin text-[var(--success,#388e3c)]" />
+              <p className="text-base font-semibold text-[var(--text-primary,#212121)]">
+                Verifying your payment…
+              </p>
+              <p className="mt-2 text-sm text-[var(--text-secondary,#878787)]">
+                Please stay on this page — your order is being confirmed
+              </p>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
