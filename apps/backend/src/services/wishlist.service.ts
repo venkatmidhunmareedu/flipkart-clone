@@ -1,5 +1,3 @@
-import type { Prisma } from "@prisma/client";
-
 import prisma from "../lib/prisma";
 import { formatProduct } from "../lib/format-product";
 
@@ -20,15 +18,16 @@ const productInclude = {
   },
 } as const;
 
-type WishlistItemWithProduct = Prisma.WishlistItemGetPayload<{
-  include: {
-    product: { include: typeof productInclude };
-  };
-}>;
+type WishlistItemWithProduct = {
+  id: string;
+  productId: string;
+  createdAt: Date;
+  product: Parameters<typeof formatProduct>[0];
+};
 
-type WishlistItemProductId = Prisma.WishlistItemGetPayload<{
-  select: { productId: true };
-}>;
+type WishlistItemProductId = {
+  productId: string;
+};
 
 export async function getWishlist(userId: string) {
   const items = await prisma.wishlistItem.findMany({
