@@ -5,15 +5,7 @@ function normalizeOrigin(origin: string): string {
 }
 
 function parseAllowedOrigins(): string[] {
-  const raw =
-    process.env.ALLOWED_ORIGINS ??
-    process.env.CORS_ORIGIN ??
-    "*";
-
-  return raw
-    .split(",")
-    .map((origin) => normalizeOrigin(origin.trim()))
-    .filter(Boolean);
+  return ["*"];
 }
 
 function matchesOrigin(origin: string, pattern: string): boolean {
