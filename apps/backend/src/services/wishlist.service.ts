@@ -1,3 +1,5 @@
+import type { Prisma } from "@prisma/client";
+
 import prisma from "../lib/prisma";
 import { formatProduct } from "../lib/format-product";
 
@@ -18,6 +20,16 @@ const productInclude = {
   },
 } as const;
 
+type WishlistItemWithProduct = Prisma.WishlistItemGetPayload<{
+  include: {
+    product: { include: typeof productInclude };
+  };
+}>;
+
+type WishlistItemProductId = Prisma.WishlistItemGetPayload<{
+  select: { productId: true };
+}>;
+
 export async function getWishlist(userId: string) {
   const items = await prisma.wishlistItem.findMany({
     where: { userId },
@@ -27,7 +39,7 @@ export async function getWishlist(userId: string) {
     orderBy: { createdAt: "desc" },
   });
 
-  return items.map((item) => ({
+  return items.map((item: WishlistItemWithProduct) => ({
     id: item.id,
     productId: item.productId,
     createdAt: item.createdAt.toISOString(),
@@ -41,7 +53,7 @@ export async function getWishlistProductIds(userId: string) {
     select: { productId: true },
   });
 
-  return items.map((item) => item.productId);
+  return items.map((item: WishlistItemProductId) => item.productId);
 }
 
 export async function isInWishlist(userId: string, productId: string) {

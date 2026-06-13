@@ -3,6 +3,8 @@
   "ui": "tui",
   "globalEnv": [
     "DATABASE_URL",
+    "DIRECT_URL",
+    "PORT",
     "JWT_SECRET",
     "GMAIL_USER",
     "GMAIL_APP_PASSWORD",
@@ -11,7 +13,8 @@
     "NEXT_PUBLIC_API_URL",
     "NEXT_PUBLIC_RAZORPAY_KEY_ID",
     "NEXTAUTH_SECRET",
-    "API_URL"
+    "API_URL",
+    "ENABLE_EXPERIMENTAL_COREPACK"
   ],
   "tasks": {
     "build": {
