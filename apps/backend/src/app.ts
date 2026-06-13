@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-
 import addressRoutes from "./routes/addresses.routes";
 import authRoutes from "./routes/auth.routes";
 import cartRoutes from "./routes/cart.routes";
@@ -15,22 +14,31 @@ const app = express();
 
 const allowedOrigins = [
   "https://flipkart-clone-frontend-ten.vercel.app",
-  /^https:\/\/.*\.vercel\.app$/, // Use RegEx for wildcard subdomains
   "http://localhost:3000",
 ];
 
+const vercelPattern = /^https:\/\/.*\.vercel\.app$/;
+
 app.use(cors({
-  origin: allowedOrigins,
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin) || vercelPattern.test(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS policy: origin ${origin} not allowed`));
+    }
+  },
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 }));
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.json({
-    message: "Server Running 🚀"
-  });
+  res.json({ message: "Server Running 🚀" });
 });
 
 app.use("/api/health", healthRoutes);
