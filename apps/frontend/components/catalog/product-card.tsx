@@ -44,7 +44,7 @@ export function ProductCard({
           </div>
         </div>
 
-        <h3 className="mb-1 line-clamp-1 text-[13px] leading-snug text-[var(--text-secondary,#878787)]">
+        <h3 className="mb-1.5 line-clamp-1 text-sm font-semibold leading-snug text-[var(--text-primary,#212121)]">
           {product.title}
         </h3>
 
@@ -54,12 +54,12 @@ export function ProductCard({
               {formatPrice(product.mrp)}
             </span>
           )}
-          <span className="text-sm font-semibold text-[var(--text-primary,#212121)]">
+          <span className="text-[15px] font-bold text-[var(--text-primary,#212121)]">
             {formatPrice(product.sellingPrice)}
           </span>
         </div>
 
-        <p className="mt-0.5 text-[11px] font-medium text-[var(--primary,#2874f0)]">
+        <p className="mt-1 text-xs font-medium text-[var(--primary,#2874f0)]">
           {formatPrice(upiOffer)} with UPI offer + more
         </p>
       </Link>
@@ -94,12 +94,12 @@ export function ProductCard({
       </div>
 
       <div className="flex flex-1 flex-col gap-1">
-        <h3 className="line-clamp-2 text-sm leading-snug text-[var(--text-primary,#212121)]">
+        <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-[var(--text-primary,#212121)]">
           {product.title}
         </h3>
 
         <div className="mt-auto flex flex-wrap items-baseline gap-1.5">
-          <span className="text-base font-semibold text-[var(--text-primary,#212121)]">
+          <span className="text-[17px] font-bold text-[var(--text-primary,#212121)]">
             {formatPrice(product.sellingPrice)}
           </span>
           {product.discountPercent > 0 && (
@@ -114,7 +114,7 @@ export function ProductCard({
           )}
         </div>
 
-        <p className="text-[11px] font-medium text-[var(--primary,#2874f0)]">
+        <p className="text-xs font-medium text-[var(--primary,#2874f0)]">
           {formatPrice(upiOffer)} with Bank offer
         </p>
 

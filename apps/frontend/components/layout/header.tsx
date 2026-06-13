@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ChevronDown, X } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { Suspense, useState } from "react";
 
 import { CartCountBadge } from "@/components/cart/cart-count-badge";
@@ -13,6 +14,8 @@ import {
 } from "@/components/icons/flipkart-icons";
 import { SearchBar } from "@/components/layout/search-bar";
 import { UserMenu } from "@/components/layout/user-menu";
+import { useAddresses } from "@/hooks/use-addresses";
+import type { Address } from "@/lib/address-api";
 import { cn } from "@/lib/utils";
 
 type HeaderVariant = "blue" | "white";
@@ -50,7 +53,21 @@ function FlipkartPillTabs() {
   );
 }
 
+function formatAddressLabel(address: Address): string {
+  const line = address.line2 ? `${address.line1}, ${address.line2}` : address.line1;
+  return `${address.type} ${line}`;
+}
+
 function AddressChip() {
+  const { status } = useSession();
+  const { data: addresses = [], isLoading } = useAddresses();
+
+  if (status !== "authenticated" || isLoading || addresses.length === 0) {
+    return null;
+  }
+
+  const address = addresses.find((item) => item.isDefault) ?? addresses[0];
+
   return (
     <Link
       href="/account/addresses"
@@ -58,7 +75,7 @@ function AddressChip() {
     >
       <HouseIcon className="size-4 shrink-0 text-[var(--text-primary,#212121)]" />
       <span className="truncate text-xs font-medium text-[var(--text-primary,#212121)]">
-        HOME Door No:- 3-24, patwarigudem m...
+        {formatAddressLabel(address)}
       </span>
       <ChevronDown className="size-3 shrink-0 rotate-[-90deg] text-[var(--text-secondary,#878787)]" />
     </Link>

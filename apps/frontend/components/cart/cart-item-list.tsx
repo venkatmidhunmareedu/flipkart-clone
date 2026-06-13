@@ -18,12 +18,6 @@ export function CartItemList({ items }: CartItemListProps) {
         >
           Flipkart ({items.length})
         </button>
-        <button
-          type="button"
-          className="px-4 py-3 text-sm font-medium text-[var(--text-secondary,#878787)]"
-        >
-          Grocery
-        </button>
       </div>
 
       <div className="border-b border-[var(--border,#e0e0e0)] px-4 py-3 text-sm">

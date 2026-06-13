@@ -2,6 +2,16 @@
 
 A full-stack Flipkart-style e-commerce marketplace built as a Turborepo monorepo.
 
+## Features
+
+- **Authentication** — credential-based login with NextAuth.js; passwords hashed with bcrypt; JWT session management
+- **Email verification** — OTP sent via Gmail SMTP on sign-up; accounts must verify their email before placing orders
+- **Payments** — Razorpay integration for order checkout (test mode keys work out of the box; swap for live keys before going to production)
+- **Product catalog** — browseable categories, search, product detail pages with images and attributes
+- **Cart & wishlist** — persistent per-user cart and wishlist backed by the database
+- **Order management** — full order lifecycle (pending → confirmed → shipped → delivered) with server-side price snapshots
+- **Address book** — multiple saved addresses with a default selector at checkout
+
 ## Tech stack
 
 | Layer | Technology |
@@ -70,7 +80,7 @@ pnpm prisma generate
 pnpm prisma db seed
 ```
 
-Demo user after seed: `test@example.com` / `Test@1234`
+The seed creates a ready-to-use demo account. See [Demo login](#demo-login) below.
 
 ### 4. Frontend environment
 
@@ -91,6 +101,19 @@ make run-backend    # backend only
 ```
 
 Verify backend health: [http://localhost:5000/api/health](http://localhost:5000/api/health)
+
+## Demo login
+
+After running `pnpm prisma db seed`, a verified demo account is created automatically:
+
+| Field | Value |
+|-------|-------|
+| Email | `test@example.com` |
+| Password | `Test@1234` |
+
+The account has `emailVerified: true` so you can log in immediately without going through the OTP flow. Use it to explore the cart, wishlist, checkout, and account pages.
+
+> **Note:** Re-running the seed resets this account (and all data) back to its original state.
 
 ## Assumptions
 

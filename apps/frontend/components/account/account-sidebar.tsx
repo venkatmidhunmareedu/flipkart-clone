@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import {
   ChevronRight,
-  CreditCard,
   FolderOpen,
   Package,
   User,
@@ -36,15 +35,6 @@ const NAV_SECTIONS: NavSection[] = [
     links: [
       { label: "Profile Information", href: "/account/profile" },
       { label: "Manage Addresses", href: "/account/addresses" },
-    ],
-  },
-  {
-    title: "PAYMENTS",
-    icon: CreditCard,
-    links: [
-      { label: "Gift Cards", href: "/account/payments/gift-cards" },
-      { label: "Saved UPI", href: "/account/payments/saved-upi" },
-      { label: "Saved Cards", href: "/account/payments/saved-cards" },
     ],
   },
   {
