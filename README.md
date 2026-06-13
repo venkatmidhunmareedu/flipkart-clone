@@ -1,159 +1,119 @@
-# Turborepo starter
+# Flipkart Clone
 
-This Turborepo starter is maintained by the Turborepo core team.
+A full-stack Flipkart-style e-commerce marketplace built as a Turborepo monorepo.
 
-## Using this example
+## Tech stack
 
-Run the following command:
+| Layer | Technology |
+|-------|------------|
+| Frontend | Next.js 16, React 19, Tailwind CSS 4, TanStack Query |
+| Backend | Express 5, TypeScript, Prisma 7 |
+| Database | PostgreSQL (Supabase recommended) |
+| Auth | NextAuth.js (email OTP, credentials) |
+| Payments | Razorpay (test mode) |
+| Monorepo | pnpm workspaces + Turborepo |
 
-```sh
-npx create-turbo@latest
+## Project structure
+
+```
+apps/
+  frontend/   Next.js storefront
+  backend/    Express REST API
+packages/
+  ui/         Shared React components
+  eslint-config/
+  typescript-config/
 ```
 
-## What's inside?
+## Prerequisites
 
-This Turborepo includes the following packages/apps:
+- Node.js 18+
+- pnpm 9+
+- PostgreSQL database (local or [Supabase](https://supabase.com))
 
-### Apps and Packages
+## Setup
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+### 1. Install dependencies
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
+```bash
+pnpm install
 ```
 
-Without global `turbo`, use your package manager:
+### 2. Backend environment
 
-```sh
-cd my-turborepo
-npx turbo build
-pnpm dlx turbo build
-pnpm exec turbo build
+Copy the example env and fill in your database credentials:
+
+```bash
+cp apps/backend/.env.example apps/backend/.env.development
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+Required variables:
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+| Variable | Description |
+|----------|-------------|
+| `PORT` | API port (default `5000`) |
+| `DATABASE_URL` | PostgreSQL connection string (pooler URL for Supabase) |
+| `DIRECT_URL` | Direct PostgreSQL URL (required for Prisma migrations on Supabase) |
+| `JWT_SECRET` | Secret for JWT signing |
+| `NEXTAUTH_SECRET` | Must match frontend NextAuth secret |
+| `GMAIL_USER` | Gmail address for OTP emails (optional in dev) |
+| `GMAIL_APP_PASSWORD` | Gmail app password for SMTP |
+| `RAZORPAY_KEY_ID` | Razorpay test/live key ID |
+| `RAZORPAY_KEY_SECRET` | Razorpay secret |
 
-```sh
-turbo build --filter=docs
+### 3. Database migrate & seed
+
+```bash
+cd apps/backend
+pnpm prisma migrate dev --name init
+pnpm prisma generate
+pnpm prisma db seed
 ```
 
-Without global `turbo`:
+Demo user after seed: `test@example.com` / `Test@1234`
 
-```sh
-npx turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+### 4. Frontend environment
+
+```bash
+cp apps/frontend/.env.local.example apps/frontend/.env.local
 ```
 
-### Develop
+Set `NEXTAUTH_SECRET` to the same value as the backend.
 
-To develop all apps and packages, run the following command:
+### 5. Run dev servers
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+From repo root:
 
-```sh
-cd my-turborepo
-turbo dev
+```bash
+make run-all        # both frontend (3000) and backend (5000)
+make run-frontend   # frontend only
+make run-backend    # backend only
 ```
 
-Without global `turbo`, use your package manager:
+Verify backend health: [http://localhost:5000/api/health](http://localhost:5000/api/health)
 
-```sh
-cd my-turborepo
-npx turbo dev
-pnpm exec turbo dev
-pnpm exec turbo dev
-```
+## Assumptions
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+- Money stored as integers in **paise** (₹1 = 100 paise)
+- Email-only OTP verification (no phone OTP)
+- Indian pincodes validated as 6 digits
+- Cart and order prices snapshotted server-side at add/checkout time
+- Razorpay used in test mode until production keys are configured
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+## Deployment
 
-```sh
-turbo dev --filter=web
-```
+| App | URL |
+|-----|-----|
+| Frontend | _TBD_ |
+| Backend API | _TBD_ |
 
-Without global `turbo`:
+## Documentation
 
-```sh
-npx turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+- [PRD.md](./PRD.md) — product requirements
+- [SCHEMA.md](./SCHEMA.md) — database schema reference
+- [ARCHITECTURE.md](./ARCHITECTURE.md) — system architecture
+- [todos/](./todos/) — implementation task breakdown by module
 
-### Remote Caching
+## License
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-pnpm exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-pnpm exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+Private — for learning and portfolio use.

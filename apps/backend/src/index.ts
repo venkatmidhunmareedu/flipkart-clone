@@ -1,4 +1,8 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+import path from "path";
+
+dotenv.config({ path: path.resolve(__dirname, "../.env.development") });
+dotenv.config({ path: path.resolve(__dirname, "../.env"), override: true });
 
 import app from "./app";
 

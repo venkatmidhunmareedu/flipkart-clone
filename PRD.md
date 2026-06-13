@@ -18,11 +18,13 @@ You are allowed and encouraged to use AI tools such as ChatGPT, Claude, GitHub C
 
 ## Technical Stack
 
-| Layer | Technology |
-|-------|------------|
-| **Frontend** | React.js or Next.js (Single Page Application) |
-| **Backend** | Node.js with Express.js **or** Python with FastAPI/Django |
-| **Database** | PostgreSQL or MySQL (design your own schema) |
+
+| Layer        | Technology                                                |
+| ------------ | --------------------------------------------------------- |
+| **Frontend** | React.js or Next.js (Single Page Application)             |
+| **Backend**  | Node.js with Express.js **or** Python with FastAPI/Django |
+| **Database** | PostgreSQL or MySQL (design your own schema)              |
+
 
 ---
 
@@ -71,14 +73,16 @@ You are allowed and encouraged to use AI tools such as ChatGPT, Claude, GitHub C
 
 ## Important Notes
 
-| Topic | Requirement |
-|-------|-------------|
-| **UI Design** | Your application should closely resemble Flipkart's design, including navigation, product cards, detail page layout, and cart page. Study Flipkart's UI carefully before starting. |
-| **No Login Required** | Assume a default user is logged in. Focus on the e-commerce functionality rather than authentication. |
-| **Sample Data** | Seed your database with sample products across multiple categories. |
-| **Database Design** | Design your own database schema. This will be evaluated. |
-| **README File** | Include setup instructions, tech stack used, and any assumptions made. |
-| **Original Work** | Plagiarism from existing repositories will result in immediate disqualification. |
+
+| Topic                 | Requirement                                                                                                                                                                        |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **UI Design**         | Your application should closely resemble Flipkart's design, including navigation, product cards, detail page layout, and cart page. Study Flipkart's UI carefully before starting. |
+| **No Login Required** | Assume a default user is logged in. Focus on the e-commerce functionality rather than authentication.                                                                              |
+| **Sample Data**       | Seed your database with sample products across multiple categories.                                                                                                                |
+| **Database Design**   | Design your own database schema. This will be evaluated.                                                                                                                           |
+| **README File**       | Include setup instructions, tech stack used, and any assumptions made.                                                                                                             |
+| **Original Work**     | Plagiarism from existing repositories will result in immediate disqualification.                                                                                                   |
+
 
 ---
 
@@ -92,14 +96,16 @@ You are allowed and encouraged to use AI tools such as ChatGPT, Claude, GitHub C
 
 ## Evaluation Criteria
 
-| Criteria | What We Look For |
-|----------|------------------|
-| **Functionality** | All core features working correctly |
-| **UI/UX** | Visual similarity to Flipkart's design and UX patterns |
-| **Database Design** | Well-structured schema with proper relationships |
-| **Code Quality** | Clean, readable, and well-organized code |
-| **Code Modularity** | Proper separation of concerns, reusable components |
-| **Code Understanding** | Ability to explain your code during evaluation |
+
+| Criteria               | What We Look For                                       |
+| ---------------------- | ------------------------------------------------------ |
+| **Functionality**      | All core features working correctly                    |
+| **UI/UX**              | Visual similarity to Flipkart's design and UX patterns |
+| **Database Design**    | Well-structured schema with proper relationships       |
+| **Code Quality**       | Clean, readable, and well-organized code               |
+| **Code Modularity**    | Proper separation of concerns, reusable components     |
+| **Code Understanding** | Ability to explain your code during evaluation         |
+
 
 ---
 
