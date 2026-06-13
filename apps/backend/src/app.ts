@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 
-import { getCorsOptions } from "./lib/cors";
 import addressRoutes from "./routes/addresses.routes";
 import authRoutes from "./routes/auth.routes";
 import cartRoutes from "./routes/cart.routes";
@@ -14,7 +13,18 @@ import wishlistRoutes from "./routes/wishlist.routes";
 
 const app = express();
 
-app.use(cors(getCorsOptions()));
+const allowedOrigins = [
+  "https://flipkart-clone-frontend-ten.vercel.app",
+  /^https:\/\/.*\.vercel\.app$/, // Use RegEx for wildcard subdomains
+  "http://localhost:3000",
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+}));
 app.use(express.json());
 
 app.get("/", (req, res) => {
