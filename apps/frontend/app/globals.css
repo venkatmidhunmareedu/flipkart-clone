@@ -56,12 +56,15 @@
   --primary: #2874f0;
   --primary-dark: #1a5fd1;
   --accent: #ffe500;
+  --flipkart-orange: #fb641b;
   --success: #388e3c;
+  --success-light: #e8f5e9;
   --danger: #d32f2f;
   --text-primary: #212121;
   --text-secondary: #878787;
   --border: #e0e0e0;
   --surface: #f1f3f6;
+  --footer-bg: #172337;
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -137,5 +140,17 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+@layer utilities {
+  .flipkart-card {
+    @apply rounded-sm bg-white shadow-sm;
+  }
+  .flipkart-input-underline {
+    @apply w-full border-0 border-b border-[var(--border,#e0e0e0)] bg-transparent px-0 py-2.5 text-sm outline-none focus:border-[var(--primary,#2874f0)];
+  }
+  .flipkart-section-header {
+    @apply bg-[var(--primary,#2874f0)] px-4 py-2.5 text-sm font-medium text-white;
   }
 }

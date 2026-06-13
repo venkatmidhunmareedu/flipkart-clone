@@ -14,12 +14,10 @@ export default async function RegisterPage() {
 
   return (
     <AuthShell
-      title="Join us"
       heading="Looks like you're new here!"
-      description="Sign up with your email to get exclusive offers, personalized recommendations, and a faster checkout experience."
-      cta={{ label: "Login", href: "/login" }}
+      description="Sign up with your email to get started"
+      cta={{ label: "Existing User? Log in", href: "/login" }}
     >
-      <h2 className="mb-6 text-xl font-medium text-[var(--text-primary,#212121)]">Create Account</h2>
       <RegisterForm />
     </AuthShell>
   );

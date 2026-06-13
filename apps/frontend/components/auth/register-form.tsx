@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
 import { FormField, Input } from "@/components/ui/input";
 import { apiFetch } from "@/lib/api";
 
@@ -53,7 +52,7 @@ export function RegisterForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-4">
+    <form onSubmit={handleSubmit} className="flex w-full flex-col gap-4">
       <FormField id="firstName" label="First Name">
         <Input
           id="firstName"
@@ -61,6 +60,7 @@ export function RegisterForm() {
           value={firstName}
           onChange={(event) => setFirstName(event.target.value)}
           placeholder="Enter First Name"
+          className="rounded-sm border-[var(--border,#e0e0e0)]"
         />
       </FormField>
 
@@ -70,6 +70,7 @@ export function RegisterForm() {
           value={lastName}
           onChange={(event) => setLastName(event.target.value)}
           placeholder="Enter Last Name"
+          className="rounded-sm border-[var(--border,#e0e0e0)]"
         />
       </FormField>
 
@@ -81,6 +82,7 @@ export function RegisterForm() {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="Enter Email"
+          className="rounded-sm border-[var(--border,#e0e0e0)]"
         />
       </FormField>
 
@@ -93,6 +95,7 @@ export function RegisterForm() {
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           placeholder="Enter Password"
+          className="rounded-sm border-[var(--border,#e0e0e0)]"
         />
       </FormField>
 
@@ -105,23 +108,30 @@ export function RegisterForm() {
           value={confirmPassword}
           onChange={(event) => setConfirmPassword(event.target.value)}
           placeholder="Confirm Password"
+          className="rounded-sm border-[var(--border,#e0e0e0)]"
         />
       </FormField>
 
-      <Button
+      <p className="text-xs leading-relaxed text-[var(--text-secondary,#878787)]">
+        By continuing, you agree to Flipkart&apos;s{" "}
+        <span className="text-[var(--primary,#2874f0)]">Terms of Use</span> and{" "}
+        <span className="text-[var(--primary,#2874f0)]">Privacy Policy</span>.
+      </p>
+
+      <button
         type="submit"
         disabled={loading}
-        className="h-11 w-full bg-[#fb641b] text-white hover:bg-[#e85a17]"
+        className="h-12 w-full rounded-sm bg-[var(--flipkart-orange,#fb641b)] text-sm font-semibold uppercase tracking-wide text-white shadow-sm hover:bg-[#e85a17] disabled:opacity-50"
       >
-        {loading ? "Creating account..." : "Sign Up"}
-      </Button>
+        {loading ? "Creating account..." : "Continue"}
+      </button>
 
-      <p className="text-center text-sm text-[var(--text-secondary,#878787)]">
-        Already have an account?{" "}
-        <Link href="/login" className="font-medium text-[var(--primary,#2874f0)] hover:underline">
-          Login
-        </Link>
-      </p>
+      <Link
+        href="/login"
+        className="flex h-12 w-full items-center justify-center rounded-sm border border-[var(--border,#e0e0e0)] bg-white text-sm font-medium text-[var(--primary,#2874f0)] shadow-sm hover:bg-[var(--surface,#f1f3f6)]"
+      >
+        Existing User? Log in
+      </Link>
     </form>
   );
 }

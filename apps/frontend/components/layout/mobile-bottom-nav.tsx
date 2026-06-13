@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Grid3X3, Heart, Home, User } from "lucide-react";
+import { Grid3X3, Heart, Home, ShoppingCart, User } from "lucide-react";
 
+import { CartCountBadge } from "@/components/cart/cart-count-badge";
 import { cn } from "@/lib/utils";
 
 const TABS = [
@@ -13,6 +14,13 @@ const TABS = [
     href: "/category/electronics",
     icon: Grid3X3,
     match: (path: string) => path.startsWith("/category"),
+  },
+  {
+    label: "Cart",
+    href: "/cart",
+    icon: ShoppingCart,
+    match: (path: string) => path.startsWith("/cart"),
+    showBadge: true,
   },
   {
     label: "Wishlist",
@@ -46,13 +54,16 @@ export function MobileBottomNav() {
               key={tab.label}
               href={tab.href}
               className={cn(
-                "flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] font-medium transition-colors",
+                "relative flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] font-medium transition-colors",
                 isActive
                   ? "text-[var(--primary,#2874f0)]"
                   : "text-[var(--text-secondary,#878787)]",
               )}
             >
-              <Icon className={cn("size-5", isActive && "fill-[var(--primary,#2874f0)]/10")} />
+              <span className="relative">
+                <Icon className={cn("size-5", isActive && "fill-[var(--primary,#2874f0)]/10")} />
+                {"showBadge" in tab && tab.showBadge && <CartCountBadge />}
+              </span>
               {tab.label}
             </Link>
           );

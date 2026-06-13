@@ -30,11 +30,11 @@ export function CatalogListing({
   fixedCategory,
 }: CatalogListingProps) {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <div className="mx-auto max-w-7xl px-4 py-4">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3 rounded-sm bg-white px-4 py-3 shadow-sm">
         <div>
-          <h1 className="text-lg font-medium text-[var(--text-primary,#212121)]">{title}</h1>
-          <p className="text-sm text-[var(--text-secondary,#878787)]">
+          <h1 className="text-base font-medium text-[var(--text-primary,#212121)]">{title}</h1>
+          <p className="text-xs text-[var(--text-secondary,#878787)]">
             Showing {products.length} of {total} results
             {page > 1 ? ` · Page ${page}` : ""}
           </p>
@@ -44,7 +44,7 @@ export function CatalogListing({
         </Suspense>
       </div>
 
-      <div className="flex flex-col gap-4 lg:flex-row">
+      <div className="flex flex-col gap-3 lg:flex-row">
         <Suspense fallback={null}>
           <FilterSidebar
             categories={categories}

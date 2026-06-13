@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MoreVertical } from "lucide-react";
+import { MoreVertical, Plus } from "lucide-react";
 
 import { AddressForm } from "@/components/checkout/address-form";
 import {
@@ -13,13 +13,13 @@ import {
   type Address,
 } from "@/hooks/use-addresses";
 import type { CreateAddressInput } from "@/lib/address-api";
-import { cn } from "@/lib/utils";
 
 type AddressCardProps = {
   address: Address;
+  isLast: boolean;
 };
 
-function AddressCard({ address }: AddressCardProps) {
+function AddressCard({ address, isLast }: AddressCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const deleteAddress = useDeleteAddress();
@@ -44,7 +44,7 @@ function AddressCard({ address }: AddressCardProps) {
 
   if (editing) {
     return (
-      <div className="rounded-sm border border-[var(--border,#e0e0e0)] bg-white p-4">
+      <div className="px-4 py-4">
         <AddressForm
           initialValues={{
             name: address.name,
@@ -66,18 +66,11 @@ function AddressCard({ address }: AddressCardProps) {
   }
 
   return (
-    <article className="relative rounded-sm border border-[var(--border,#e0e0e0)] bg-white p-4">
+    <article className={`relative px-4 py-4 ${!isLast ? "border-b border-[var(--border,#e0e0e0)]" : ""}`}>
       <div className="flex items-start justify-between gap-2">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded-sm bg-[var(--surface,#f1f3f6)] px-2 py-0.5 text-[10px] font-semibold uppercase text-[var(--text-secondary,#878787)]">
-            {address.type}
-          </span>
-          {address.isDefault && (
-            <span className="rounded-sm bg-[var(--primary,#2874f0)]/10 px-2 py-0.5 text-[10px] font-semibold text-[var(--primary,#2874f0)]">
-              Default
-            </span>
-          )}
-        </div>
+        <span className="rounded-sm bg-[var(--surface,#f1f3f6)] px-2 py-0.5 text-[10px] font-semibold uppercase text-[var(--text-secondary,#878787)]">
+          {address.type}
+        </span>
 
         <div className="relative">
           <button
@@ -122,13 +115,13 @@ function AddressCard({ address }: AddressCardProps) {
         </div>
       </div>
 
-      <p className="mt-3 text-sm font-medium text-[var(--text-primary,#212121)]">
-        {address.name} · {address.phone}
+      <p className="mt-2 text-sm font-medium text-[var(--text-primary,#212121)]">
+        {address.name} <span className="font-normal text-[var(--text-secondary,#878787)]">{address.phone}</span>
       </p>
-      <p className="mt-1 text-sm text-[var(--text-secondary,#878787)]">
+      <p className="mt-1 text-sm leading-relaxed text-[var(--text-secondary,#878787)]">
         {address.line1}
         {address.line2 ? `, ${address.line2}` : ""}, {address.city}, {address.state} -{" "}
-        <span className="font-semibold text-[var(--text-primary,#212121)]">{address.pincode}</span>
+        <span className="font-medium text-[var(--text-primary,#212121)]">{address.pincode}</span>
       </p>
     </article>
   );
@@ -145,27 +138,28 @@ export function AddressList() {
   }
 
   if (isLoading) {
-    return <div className="h-32 animate-pulse rounded-sm bg-white" />;
+    return <div className="h-32 animate-pulse rounded-sm bg-white shadow-sm" />;
   }
 
   if (isError) {
     return <p className="text-sm text-[var(--danger,#d32f2f)]">{error.message}</p>;
   }
 
+  const list = addresses ?? [];
+
   return (
-    <div className="space-y-4">
+    <div className="rounded-sm bg-white shadow-sm">
       <button
         type="button"
         onClick={() => setShowForm(!showForm)}
-        className={cn(
-          "w-full rounded-sm border border-dashed border-[var(--primary,#2874f0)] bg-white px-4 py-3 text-left text-sm font-medium text-[var(--primary,#2874f0)] hover:bg-[var(--primary,#2874f0)]/5",
-        )}
+        className="flex w-full items-center gap-2 border-b border-[var(--border,#e0e0e0)] px-4 py-4 text-left text-sm font-semibold uppercase tracking-wide text-[var(--primary,#2874f0)] hover:bg-[var(--surface,#f1f3f6)]"
       >
-        + ADD A NEW ADDRESS
+        <Plus className="size-4" />
+        Add a New Address
       </button>
 
       {showForm && (
-        <div className="rounded-sm border border-[var(--border,#e0e0e0)] bg-white p-4">
+        <div className="border-b border-[var(--border,#e0e0e0)] px-4 py-4">
           <AddressForm
             onSubmit={handleCreate}
             submitLabel="Save Address"
@@ -175,8 +169,8 @@ export function AddressList() {
         </div>
       )}
 
-      {(addresses ?? []).map((address) => (
-        <AddressCard key={address.id} address={address} />
+      {list.map((address, index) => (
+        <AddressCard key={address.id} address={address} isLast={index === list.length - 1} />
       ))}
     </div>
   );

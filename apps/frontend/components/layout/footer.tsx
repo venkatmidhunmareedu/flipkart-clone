@@ -1,31 +1,33 @@
-import Link from "next/link";
-
 const footerSections = [
   {
     title: "ABOUT",
-    links: ["Contact Us", "About Us", "Careers", "Press"],
+    links: ["Contact Us", "About Us", "Careers", "Flipkart Stories", "Press"],
+  },
+  {
+    title: "GROUP COMPANIES",
+    links: ["Myntra", "Cleartrip", "Shopsy"],
   },
   {
     title: "HELP",
-    links: ["Payments", "Shipping", "Returns", "FAQ"],
+    links: ["Payments", "Shipping", "Cancellation & Returns", "FAQ"],
   },
   {
     title: "CONSUMER POLICY",
-    links: ["Cancellation", "Terms", "Privacy Policy"],
+    links: ["Cancellation & Returns", "Terms Of Use", "Security", "Privacy", "Sitemap"],
   },
 ];
 
 export function Footer() {
   return (
-    <footer className="mt-auto bg-[#172337] text-white">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
+    <footer className="mt-auto bg-[var(--footer-bg,#172337)] text-white">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-5">
         {footerSections.map((section) => (
           <div key={section.title}>
             <h3 className="mb-3 text-xs font-medium tracking-wide text-[#878787]">{section.title}</h3>
             <ul className="space-y-2">
               {section.links.map((link) => (
                 <li key={link}>
-                  <span className="text-sm text-white/90">{link}</span>
+                  <span className="cursor-default text-sm text-white/90 hover:underline">{link}</span>
                 </li>
               ))}
             </ul>
@@ -33,23 +35,18 @@ export function Footer() {
         ))}
 
         <div>
-          <h3 className="mb-3 text-xs font-medium tracking-wide text-[#878787]">SOCIAL</h3>
-          <div className="flex gap-3 text-sm text-white/90">
-            <Link href="#" aria-label="Facebook">
-              Facebook
-            </Link>
-            <Link href="#" aria-label="Twitter">
-              Twitter
-            </Link>
-            <Link href="#" aria-label="YouTube">
-              YouTube
-            </Link>
-          </div>
+          <h3 className="mb-3 text-xs font-medium tracking-wide text-[#878787]">
+            Mail Us
+          </h3>
+          <p className="text-sm leading-relaxed text-white/90">
+            Flipkart Internet Private Limited, Buildings Alyssa, Begonia &amp; Clove Embassy Tech
+            Village, Bengaluru, 560103, Karnataka, India
+          </p>
         </div>
       </div>
 
       <div className="border-t border-white/10 px-4 py-4 text-center text-sm text-[#878787]">
-        © 2026 Flipkart Clone — SDE Assignment
+        © 2007–2026 Flipkart Clone — SDE Assignment
       </div>
     </footer>
   );

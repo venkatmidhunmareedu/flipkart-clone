@@ -12,6 +12,17 @@ import {
   useUser,
 } from "@/hooks/use-user";
 
+function ReadOnlyField({ label, value }: { label: string; value: string }) {
+  return (
+    <label className="block text-sm">
+      <span className="mb-1 block text-xs text-[var(--text-secondary,#878787)]">{label}</span>
+      <div className="rounded-sm border border-[var(--border,#e0e0e0)] bg-[var(--surface,#f1f3f6)] px-3 py-2.5 text-sm text-[var(--text-primary,#212121)]">
+        {value}
+      </div>
+    </label>
+  );
+}
+
 export function ProfileForm() {
   const router = useRouter();
   const { data: user, isLoading } = useUser();
@@ -81,8 +92,8 @@ export function ProfileForm() {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-sm bg-white p-6 shadow-sm">
+    <div className="rounded-sm bg-white p-6 shadow-sm">
+      <section className="border-b border-[var(--border,#e0e0e0)] pb-6">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-base font-medium text-[var(--text-primary,#212121)]">
             Personal Information
@@ -112,7 +123,7 @@ export function ProfileForm() {
             </div>
 
             <div>
-              <span className="mb-2 block text-sm text-[var(--text-secondary,#878787)]">Gender</span>
+              <span className="mb-2 block text-sm text-[var(--text-secondary,#878787)]">Your Gender</span>
               <div className="flex gap-4">
                 {["Male", "Female"].map((option) => (
                   <label key={option} className="flex items-center gap-2 text-sm">
@@ -122,6 +133,7 @@ export function ProfileForm() {
                       value={option}
                       checked={gender === option}
                       onChange={() => setGender(option)}
+                      className="accent-[var(--primary,#2874f0)]"
                     />
                     {option}
                   </label>
@@ -142,39 +154,40 @@ export function ProfileForm() {
               >
                 Save
               </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setEditingProfile(false)}
-                className="rounded-sm"
-              >
+              <Button type="button" variant="outline" onClick={() => setEditingProfile(false)} className="rounded-sm">
                 Cancel
               </Button>
             </div>
           </div>
         ) : (
-          <dl className="space-y-2 text-sm">
-            <div>
-              <dt className="text-[var(--text-secondary,#878787)]">Name</dt>
-              <dd className="font-medium">
-                {user.firstName} {user.lastName ?? ""}
-              </dd>
-            </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <ReadOnlyField label="First Name" value={user.firstName} />
+            <ReadOnlyField label="Last Name" value={user.lastName ?? "—"} />
             {user.gender && (
-              <div>
-                <dt className="text-[var(--text-secondary,#878787)]">Gender</dt>
-                <dd className="font-medium">{user.gender}</dd>
+              <div className="sm:col-span-2">
+                <span className="mb-2 block text-xs text-[var(--text-secondary,#878787)]">Your Gender</span>
+                <div className="flex gap-4 text-sm">
+                  {["Male", "Female"].map((option) => (
+                    <label key={option} className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        checked={user.gender === option}
+                        readOnly
+                        className="accent-[var(--primary,#2874f0)]"
+                      />
+                      {option}
+                    </label>
+                  ))}
+                </div>
               </div>
             )}
-          </dl>
+          </div>
         )}
       </section>
 
-      <section className="rounded-sm bg-white p-6 shadow-sm">
+      <section className="border-b border-[var(--border,#e0e0e0)] py-6">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-base font-medium text-[var(--text-primary,#212121)]">
-            Email Address
-          </h2>
+          <h2 className="text-base font-medium text-[var(--text-primary,#212121)]">Email Address</h2>
           {!editingEmail && (
             <button
               type="button"
@@ -209,29 +222,22 @@ export function ProfileForm() {
               >
                 Save & Verify
               </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setEditingEmail(false)}
-                className="rounded-sm"
-              >
+              <Button type="button" variant="outline" onClick={() => setEditingEmail(false)} className="rounded-sm">
                 Cancel
               </Button>
             </div>
           </div>
         ) : (
-          <p className="text-sm font-medium">{user.email}</p>
+          <ReadOnlyField label="Email Address" value={user.email} />
         )}
         {!user.emailVerified && (
           <p className="mt-2 text-xs text-[var(--danger,#d32f2f)]">Email not verified</p>
         )}
       </section>
 
-      <section className="rounded-sm bg-white p-6 shadow-sm">
+      <section className="border-b border-[var(--border,#e0e0e0)] py-6">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-base font-medium text-[var(--text-primary,#212121)]">
-            Mobile Number
-          </h2>
+          <h2 className="text-base font-medium text-[var(--text-primary,#212121)]">Mobile Number</h2>
           {!editingPhone && (
             <button
               type="button"
@@ -268,39 +274,33 @@ export function ProfileForm() {
               >
                 Save
               </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setEditingPhone(false)}
-                className="rounded-sm"
-              >
+              <Button type="button" variant="outline" onClick={() => setEditingPhone(false)} className="rounded-sm">
                 Cancel
               </Button>
             </div>
           </div>
         ) : (
-          <p className="text-sm font-medium">
-            {user.phone ? formatPhone(user.phone) : "Not added yet"}
-          </p>
+          <ReadOnlyField
+            label="Mobile Number"
+            value={user.phone ? formatPhone(user.phone) : "Not added yet"}
+          />
         )}
       </section>
 
-      <section className="rounded-sm bg-white p-6 shadow-sm">
+      <section className="pt-6">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-base font-medium text-[var(--text-primary,#212121)]">Password</h2>
-          {!editingPassword && (
-            <button
-              type="button"
-              onClick={() => setEditingPassword(true)}
-              className="text-sm font-medium text-[var(--primary,#2874f0)] hover:underline"
-            >
-              Change
-            </button>
-          )}
+          <h2 className="text-base font-medium text-[var(--text-primary,#212121)]">FAQs</h2>
         </div>
+        <p className="text-sm font-medium text-[var(--text-primary,#212121)]">
+          What happens when I update my email address (or mobile number)?
+        </p>
+        <p className="mt-2 text-sm text-[var(--text-secondary,#878787)]">
+          Your login credentials remain unchanged. You will receive all account-related communication
+          on your updated email address or mobile number.
+        </p>
 
         {editingPassword ? (
-          <div className="space-y-3">
+          <div className="mt-4 space-y-3 border-t border-[var(--border,#e0e0e0)] pt-4">
             <Input
               type="password"
               value={currentPassword}
@@ -325,18 +325,19 @@ export function ProfileForm() {
               >
                 Update Password
               </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setEditingPassword(false)}
-                className="rounded-sm"
-              >
+              <Button type="button" variant="outline" onClick={() => setEditingPassword(false)} className="rounded-sm">
                 Cancel
               </Button>
             </div>
           </div>
         ) : (
-          <p className="text-sm text-[var(--text-secondary,#878787)]">••••••••</p>
+          <button
+            type="button"
+            onClick={() => setEditingPassword(true)}
+            className="mt-4 text-sm font-medium text-[var(--primary,#2874f0)] hover:underline"
+          >
+            Change Password
+          </button>
         )}
       </section>
     </div>

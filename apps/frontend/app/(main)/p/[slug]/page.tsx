@@ -45,8 +45,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const { product, breadcrumb } = result.data;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6">
-      <div className="grid gap-8 lg:grid-cols-2">
+    <div className="mx-auto max-w-7xl px-4 py-4">
+      <div className="grid gap-4 lg:grid-cols-2">
         <ProductImageGallery
           images={product.images}
           title={product.title}
@@ -55,7 +55,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <ProductInfo product={product} breadcrumb={breadcrumb} />
       </div>
 
-      <ProductSpecs product={product} />
+      <div className="mt-4 rounded-sm bg-white p-4 shadow-sm">
+        <ProductSpecs product={product} />
+      </div>
       <SimilarProducts products={similar} />
     </div>
   );

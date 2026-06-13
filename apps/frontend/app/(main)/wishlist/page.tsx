@@ -5,8 +5,8 @@ export const dynamic = "force-dynamic";
 
 export default function WishlistPage() {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
-      <div className="flex flex-col gap-6 md:flex-row">
+    <div className="mx-auto max-w-7xl px-4 py-6">
+      <div className="flex flex-col gap-4 md:flex-row">
         <AccountSidebar />
         <WishlistPanel />
       </div>

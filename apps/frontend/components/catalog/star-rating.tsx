@@ -21,7 +21,7 @@ export function StarRating({
 
   return (
     <div className={cn("flex items-center gap-1", className)}>
-      <div className="flex items-center rounded-sm bg-[var(--success,#388e3c)] px-1 py-0.5 text-white">
+      <div className="flex items-center gap-0.5 rounded-sm bg-[var(--success,#388e3c)] px-1.5 py-0.5 text-white">
         <span className={cn("font-medium", size === "sm" ? "text-[10px]" : "text-xs")}>
           {rating.toFixed(1)}
         </span>
