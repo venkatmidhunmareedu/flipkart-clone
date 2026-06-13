@@ -19,11 +19,10 @@ const allowedOrigins = [
 
 const vercelPattern = /^https:\/\/.*\.vercel\.app$/;
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, curl, Postman)
-    if (!origin) return callback(null, true);
 
+const corsOptions = {
+  origin: (origin: string | undefined, callback: Function) => {
+    if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin) || vercelPattern.test(origin)) {
       callback(null, true);
     } else {
@@ -33,7 +32,10 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
-}));
+};
+
+app.options("*", cors(corsOptions)); // preflight
+app.use(cors(corsOptions));          // actual requests
 
 app.use(express.json());
 
