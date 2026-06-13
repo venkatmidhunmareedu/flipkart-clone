@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+
+import { getCorsOptions } from "./lib/cors";
 import addressRoutes from "./routes/addresses.routes";
 import authRoutes from "./routes/auth.routes";
 import cartRoutes from "./routes/cart.routes";
@@ -12,30 +14,7 @@ import wishlistRoutes from "./routes/wishlist.routes";
 
 const app = express();
 
-const allowedOrigins = [
-  "https://flipkart-clone-frontend-ten.vercel.app",
-  "http://localhost:3000",
-];
-
-const vercelPattern = /^https:\/\/.*\.vercel\.app$/;
-
-
-const corsOptions = {
-  origin: (origin: string | undefined, callback: Function) => {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin) || vercelPattern.test(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error(`CORS policy: origin ${origin} not allowed`));
-    }
-  },
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
-};
-
-app.options("*", cors(corsOptions)); // preflight
-app.use(cors(corsOptions));          // actual requests
+app.use(cors(getCorsOptions()));
 
 app.use(express.json());
 
