@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 
+import { getCorsOptions } from "./lib/cors";
 import addressRoutes from "./routes/addresses.routes";
 import authRoutes from "./routes/auth.routes";
 import cartRoutes from "./routes/cart.routes";
@@ -13,7 +14,8 @@ import wishlistRoutes from "./routes/wishlist.routes";
 
 const app = express();
 
-app.use(cors());
+app.use(cors(getCorsOptions()));
+app.options(/.*/, cors(getCorsOptions()));
 app.use(express.json());
 
 app.get("/", (req, res) => {
