@@ -15,7 +15,6 @@ import wishlistRoutes from "./routes/wishlist.routes";
 const app = express();
 
 app.use(cors(getCorsOptions()));
-app.options(/.*/, cors(getCorsOptions()));
 app.use(express.json());
 
 app.get("/", (req, res) => {

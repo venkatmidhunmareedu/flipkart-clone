@@ -1,27 +1,50 @@
 import type { CorsOptions } from "cors";
 
+function normalizeOrigin(origin: string): string {
+  return origin.replace(/\/+$/, "");
+}
 
-const allowedOrigins = [
-  "https://flipkart-clone-frontend-ten.vercel.app/",
-  "https://*.vercel.app/",
-  "http://localhost:3000/",
-];
+function parseAllowedOrigins(): string[] {
+  const raw =
+    process.env.ALLOWED_ORIGINS ??
+    process.env.CORS_ORIGIN ??
+    "http://localhost:3000,https://*.vercel.app";
+
+  return raw
+    .split(",")
+    .map((origin) => normalizeOrigin(origin.trim()))
+    .filter(Boolean);
+}
+
+function matchesOrigin(origin: string, pattern: string): boolean {
+  const normalizedOrigin = normalizeOrigin(origin);
+  const normalizedPattern = normalizeOrigin(pattern);
+
+  if (normalizedPattern.includes("*")) {
+    const regex = new RegExp(
+      `^${normalizedPattern.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*")}$`,
+    );
+    return regex.test(normalizedOrigin);
+  }
+
+  return normalizedOrigin === normalizedPattern;
+}
 
 export function getCorsOptions(): CorsOptions {
+  const allowedOrigins = parseAllowedOrigins();
+
   return {
     origin(origin, callback) {
-      const allowed = allowedOrigins;
-
       if (!origin) {
         callback(null, true);
         return;
       }
-      if (allowed.includes(origin)) {
-        callback(null, true);
-        return;
-      }
 
-      callback(null, false);
+      const isAllowed = allowedOrigins.some((pattern) =>
+        matchesOrigin(origin, pattern),
+      );
+
+      callback(null, isAllowed ? origin : false);
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"],
