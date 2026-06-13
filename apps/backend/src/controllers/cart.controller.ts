@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 
+import { param } from "../lib/param";
 import { validateBody } from "./auth.controller";
 import {
   addToCartSchema,
@@ -57,7 +58,7 @@ export async function updateQuantityHandler(req: Request, res: Response) {
     const body = (req as Request & { validated: { quantity: number } }).validated;
     const cart = await updateCartQuantity(
       req.user!.id,
-      req.params.productId,
+      param(req.params.productId),
       body.quantity,
     );
     res.json({ data: cart });
@@ -68,7 +69,7 @@ export async function updateQuantityHandler(req: Request, res: Response) {
 
 export async function removeFromCartHandler(req: Request, res: Response) {
   try {
-    const cart = await removeFromCart(req.user!.id, req.params.productId);
+    const cart = await removeFromCart(req.user!.id, param(req.params.productId));
     res.json({ data: cart });
   } catch (error) {
     handleCartError(error, res);

@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 
+import { param } from "../lib/param";
 import {
   getCategories,
   getCategoryBySlug,
@@ -52,7 +53,7 @@ export async function getFeatured(req: Request, res: Response) {
 
 export async function getProduct(req: Request, res: Response) {
   try {
-    const result = await getProductBySlug(req.params.slug);
+    const result = await getProductBySlug(param(req.params.slug));
 
     if (!result) {
       res.status(404).json({
@@ -72,7 +73,7 @@ export async function getProduct(req: Request, res: Response) {
 
 export async function getSimilar(req: Request, res: Response) {
   try {
-    const result = await getProductBySlug(req.params.slug);
+    const result = await getProductBySlug(param(req.params.slug));
 
     if (!result) {
       res.status(404).json({
@@ -111,7 +112,7 @@ export async function listCategories(_req: Request, res: Response) {
 
 export async function getCategory(req: Request, res: Response) {
   try {
-    const result = await getCategoryBySlug(req.params.slug);
+    const result = await getCategoryBySlug(param(req.params.slug));
 
     if (!result) {
       res.status(404).json({

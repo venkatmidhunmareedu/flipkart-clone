@@ -5,6 +5,13 @@ import { formatProduct } from "../lib/format-product";
 
 type SortBy = "relevance" | "price_asc" | "price_desc" | "rating" | "newest";
 
+type CategoryForBreadcrumb = {
+  id: string;
+  name: string;
+  slug: string;
+  parent?: CategoryForBreadcrumb | null;
+};
+
 type GetProductsInput = {
   categorySlug?: string;
   search?: string;
@@ -121,7 +128,7 @@ export async function getProductBySlug(slug: string) {
   }
 
   const breadcrumb = [];
-  let current = product.category;
+  let current: CategoryForBreadcrumb | null = product.category;
 
   while (current) {
     breadcrumb.unshift({ id: current.id, name: current.name, slug: current.slug });
@@ -194,7 +201,7 @@ export async function getCategoryBySlug(slug: string) {
   }
 
   const breadcrumb = [];
-  let current: typeof category | null = category;
+  let current: CategoryForBreadcrumb | null = category;
 
   while (current) {
     breadcrumb.unshift({ id: current.id, name: current.name, slug: current.slug });

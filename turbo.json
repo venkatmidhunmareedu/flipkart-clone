@@ -1,6 +1,18 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "ui": "tui",
+  "globalEnv": [
+    "DATABASE_URL",
+    "JWT_SECRET",
+    "GMAIL_USER",
+    "GMAIL_APP_PASSWORD",
+    "RAZORPAY_KEY_ID",
+    "RAZORPAY_KEY_SECRET",
+    "NEXT_PUBLIC_API_URL",
+    "NEXT_PUBLIC_RAZORPAY_KEY_ID",
+    "NEXTAUTH_SECRET",
+    "API_URL"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

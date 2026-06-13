@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 
+import { param } from "../lib/param";
 import { validateBody } from "./auth.controller";
 import {
   createAddressSchema,
@@ -52,7 +53,7 @@ export async function addAddressHandler(req: Request, res: Response) {
 export async function updateAddressHandler(req: Request, res: Response) {
   try {
     const body = (req as Request & { validated: UpdateAddressInput }).validated;
-    const address = await updateAddress(req.user!.id, req.params.id, body);
+    const address = await updateAddress(req.user!.id, param(req.params.id), body);
     res.json({ data: { address } });
   } catch (error) {
     handleAddressError(error, res);
@@ -61,7 +62,7 @@ export async function updateAddressHandler(req: Request, res: Response) {
 
 export async function deleteAddressHandler(req: Request, res: Response) {
   try {
-    const result = await deleteAddress(req.user!.id, req.params.id);
+    const result = await deleteAddress(req.user!.id, param(req.params.id));
     res.json({ data: result });
   } catch (error) {
     handleAddressError(error, res);
@@ -70,7 +71,7 @@ export async function deleteAddressHandler(req: Request, res: Response) {
 
 export async function setDefaultAddressHandler(req: Request, res: Response) {
   try {
-    const address = await setDefaultAddress(req.user!.id, req.params.id);
+    const address = await setDefaultAddress(req.user!.id, param(req.params.id));
     res.json({ data: { address } });
   } catch (error) {
     handleAddressError(error, res);

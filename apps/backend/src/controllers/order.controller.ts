@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import type { z } from "zod";
 
+import { param } from "../lib/param";
 import { validateBody } from "./auth.controller";
 import {
   checkDeliverySchema,
@@ -68,7 +69,7 @@ export async function getOrdersHandler(req: Request, res: Response) {
 
 export async function getOrderByIdHandler(req: Request, res: Response) {
   try {
-    const order = await getOrderById(req.user!.id, req.params.id);
+    const order = await getOrderById(req.user!.id, param(req.params.id));
     res.json({ data: { order } });
   } catch (error) {
     handleOrderError(error, res);

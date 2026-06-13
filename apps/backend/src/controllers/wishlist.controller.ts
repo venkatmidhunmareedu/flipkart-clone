@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 
+import { param } from "../lib/param";
 import { validateBody } from "./auth.controller";
 import { addToWishlistSchema } from "../lib/validators/wishlist.validators";
 import {
@@ -54,7 +55,7 @@ export async function addToWishlistHandler(req: Request, res: Response) {
 
 export async function removeFromWishlistHandler(req: Request, res: Response) {
   try {
-    const result = await removeFromWishlist(req.user!.id, req.params.productId);
+    const result = await removeFromWishlist(req.user!.id, param(req.params.productId));
     res.json({ data: result });
   } catch (error) {
     handleWishlistError(error, res);
