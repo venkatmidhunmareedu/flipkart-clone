@@ -2,9 +2,9 @@ import type { CorsOptions } from "cors";
 
 
 const allowedOrigins = [
-  "https://flipkart-clone-frontend-ten.vercel.app",
-  "https://*.vercel.app",
-  "http://localhost:3000",
+  "https://flipkart-clone-frontend-ten.vercel.app/",
+  "https://*.vercel.app/",
+  "http://localhost:3000/",
 ];
 
 export function getCorsOptions(): CorsOptions {
